@@ -33,6 +33,8 @@ The scripts exist because a language model cannot compute SHA-256: any protocol 
 
 ## Importing
 
+New here? [`TUTORIAL.md`](TUTORIAL.md) walks through a complete two-agent setup — import, integration profile, charters, both agent prompts, and a deliberate handshake failure — in about twenty minutes.
+
 ```sh
 git submodule add <this-repo-url> protocol-lib     # or vendor a copy
 ./protocol-lib/bin/acp-verify.sh                   # L2: integrity + authenticity
