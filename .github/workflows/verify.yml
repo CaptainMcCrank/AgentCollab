@@ -1,0 +1,20 @@
+name: verify
+on: [push, pull_request]
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Handshake fixture tests
+        run: ./tests/run-tests.sh
+      - name: Bundle verification
+        # L2 (integrity + maintainer signature) once the signed manifest is
+        # committed; falls back to L1 so pre-signing pushes still get integrity.
+        run: |
+          if [ -f PROTOCOL_MANIFEST.yaml.sig ]; then
+            ./bin/acp-verify.sh
+          else
+            echo "::warning::PROTOCOL_MANIFEST.yaml.sig missing — verifying at L1 only"
+            ./bin/acp-verify.sh --no-sig
+          fi
