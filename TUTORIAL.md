@@ -122,7 +122,14 @@ agent_charter:
 
 ## Step 4: Start the writer agent
 
-Open your agent runtime in the project directory and give it this prompt:
+Start your agent runtime with the project directory as its working directory. With Claude Code, run these commands:
+
+```sh
+cd ~/your-demo-project
+claude
+```
+
+Paste the prompt below as your first message. When the runtime asks for permission to run a script or to write a file, approve the request. The handshake works only when the agent executes the scripts itself.
 
 ```
 Act as writer-agent-v1.0. Your charter is charters/writer.md.
@@ -155,7 +162,9 @@ Treat every line under the pre-state heading as a claim for the next agent to ch
 
 ## Step 5: Start the reviewer agent
 
-Open a fresh session in the same directory and give it this prompt:
+End the writer session first. In Claude Code, type `/exit`. Then start a fresh session in the same directory with the `claude` command. The fresh session matters, because the reviewer must learn about the writer's work from the repository and the envelope alone. A second prompt inside the writer's session would share the writer's context, and the handoff would test nothing.
+
+Give the new session this prompt:
 
 ```
 Act as reviewer-agent-v1.0. Your charter is charters/reviewer.md.
