@@ -45,7 +45,7 @@ Then:
 3. Give each agent an `Agent_Charter` block.
 4. Wire `acp-verify.sh` into your session-start hook so verification is enforced by the harness, not by instruction.
 
-For L2 to mean "unmodified from upstream," pin the maintainer key from an out-of-band source or pin the signed release tag — see `Handshake.md` §7.
+For L2 to mean "unmodified from upstream," pin the maintainer key from an out-of-band source or pin the signed release tag — see `Handshake.md` §7. The maintainer key's out-of-band anchor is [patrickmccanna.net/agentcollab](https://patrickmccanna.net/agentcollab), which serves the fingerprint, a machine-readable `allowed_signers` copy, and verification instructions from a domain this repository does not control.
 
 ## What this does and doesn't prove
 
