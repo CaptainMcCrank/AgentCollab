@@ -90,6 +90,8 @@ Signatures use OpenSSH signing (`ssh-keygen -Y`) — chosen over GPG because the
 
 **Trust bootstrap:** the `allowed_signers` file travels inside the repository for convenience, which means a wholesale fork could replace both text and key. Importers who need L2 to mean "unmodified from *upstream*" should pin the maintainer key from an out-of-band source (the project's release page, the maintainer's site) or pin the signed git tag of the release they imported. This is the standard lock-file trust model; the handshake does not pretend otherwise.
 
+For this distribution, the maintainer key's out-of-band anchor is **<https://patrickmccanna.net/agentcollab>** — it serves the key fingerprint, a machine-readable `allowed_signers` copy, and verification instructions from a domain the repository does not control.
+
 ## 8. What this proves — and what it cannot
 
 **Proves:** both agents hold byte-identical protocol text (L0); that text is internally consistent with its manifest (L1); that text is what the maintainer signed (L2). Integrity and authenticity of the *rules*.

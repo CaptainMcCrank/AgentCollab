@@ -1,5 +1,5 @@
 protocol: AgentCollab
-version: 1.0.0
+version: 1.0.1
 hash_algorithm: sha256
 files:
   - path: protocol/Agent_Charter.md
@@ -7,6 +7,6 @@ files:
   - path: protocol/Agent_Collaboration_Protocol.md
     sha256: abe1d6b6ac349ebd3e8652677231401d7c94268cf292ca278d32f7a109aa2588
   - path: protocol/Handshake.md
-    sha256: b023a86d36b23fa632f9f322be666c1c2e14fe2445df45dcb32a44c27d1d00e0
-bundle_root: c031fa97e660faac83f19ba4edfaf1731b3b415d88de6d1e6a225d920197278f
-id: AgentCollab/1.0.0#sha256:c031fa97e660faac
+    sha256: e942ae6ab3605a634688a2b7e7d1e53457168de21a8aacc63d7b22b5daa51809
+bundle_root: ecce17042a867fe94df8c2d6a72158686f16e2213694ca252c9c38c91284e9cc
+id: AgentCollab/1.0.1#sha256:ecce17042a867fe9
