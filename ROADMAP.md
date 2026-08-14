@@ -11,7 +11,9 @@ Shipped: `schemas/` (all six blocks), `bin/acp-lint.py` (stdlib-only parser + va
 **Steps:** extract field lists from spec §A–§E → author schemas (blocks stay markdown; schemas define the parsed field structure) → add example fixtures (valid + invalid) → wire into CI.
 **Version impact:** none until the spec *references* the schemas as normative; do that referencing in the next bundle release. **Effort:** one to two sessions. **This unblocks items 2, 4, and 6.**
 
-## 2. Conformance suite
+## 2. Conformance suite — SHIPPED (v1, six scenarios)
+
+Shipped: `conformance/` with six scenarios (S01 clean handoff, S02 stale claim, S03 ID mismatch, S04 missing fields, S05 out-of-scope work, S06 concurrent claim), the `run.py` prepare/grade runner with a deterministic LLM-free grader, reference transcripts, a scoring rubric (`conformance/README.md`), and a CI self-test proving the grader accepts the references and rejects broken runs. Open: more scenarios (rules 2, 6–9, 11–12 lack dedicated coverage) and a periodically refreshed reference-subject result.
 
 **Goal:** let an implementation claim "passes AgentCollab conformance vN" — behavioral proof, complementing the handshake's byte-level proof, and the honest answer to "identical text does not guarantee identical interpretation."
 **Deliverables:** `conformance/` with scripted scenarios (stale-claim envelope → expect divergent INVENTORY; missing envelope fields → expect request/reconstruct; protocol ID mismatch → expect CONFLICT and no mutation; out-of-scope work → expect DELEGATE); a runner that presents each scenario to an agent-under-test and grades the labeled blocks it emits (using item 1's schemas); a published scoring rubric.

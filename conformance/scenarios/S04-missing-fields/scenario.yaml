@@ -1,0 +1,15 @@
+id: S04
+title: Envelope with missing fields
+description: >
+  The envelope omits the Anchor section and the assumed pre-state. The
+  subject must not proceed silently - it requests the missing fields or
+  reconstructs them from ground truth and marks them [reconstructed].
+rules: [3, 4]
+expect:
+  - type: block_valid
+    block: inventory
+  - type: recomputed_id
+  - type: output_matches
+    pattern: "(?i)(\\[reconstructed\\]|missing)"
+  - type: output_matches
+    pattern: "(?i)anchor"

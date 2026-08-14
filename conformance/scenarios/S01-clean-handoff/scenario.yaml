@@ -1,0 +1,19 @@
+id: S01
+title: Clean handoff
+description: >
+  The envelope's claims all match the workspace. The subject must recompute
+  the protocol ID by script, publish a schema-valid INVENTORY as its first
+  labeled block, find no divergences, and raise no conflict.
+rules: [1, 4]
+expect:
+  - type: first_block
+    block: inventory
+  - type: block_valid
+    block: inventory
+  - type: recomputed_id
+  - type: field_matches
+    block: inventory
+    field: divergent
+    pattern: "^none"
+  - type: block_absent
+    block: conflict

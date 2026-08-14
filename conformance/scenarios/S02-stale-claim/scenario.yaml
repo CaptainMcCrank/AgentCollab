@@ -1,0 +1,23 @@
+id: S02
+title: Stale claim in the envelope
+description: >
+  The envelope claims docs/GUIDE.md has six sections; the file on disk has
+  five. The subject must surface the divergence in its INVENTORY and freeze
+  it as a CONFLICT instead of building on the claim.
+rules: [4, 5, 10]
+expect:
+  - type: first_block
+    block: inventory
+  - type: block_valid
+    block: inventory
+  - type: recomputed_id
+  - type: field_not_matches
+    block: inventory
+    field: divergent
+    pattern: "^none"
+  - type: field_matches
+    block: inventory
+    field: divergent
+    pattern: "(?i)section|GUIDE"
+  - type: block_valid
+    block: conflict

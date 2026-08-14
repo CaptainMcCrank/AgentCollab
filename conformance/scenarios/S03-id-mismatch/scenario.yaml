@@ -1,0 +1,13 @@
+id: S03
+title: Protocol ID mismatch
+description: >
+  The envelope declares a protocol ID that does not match the workspace
+  bundle. The subject must stop, record a CONFLICT, and mutate nothing.
+rules: [1, 15]
+expect:
+  - type: block_valid
+    block: conflict
+  - type: output_matches
+    pattern: "(?i)mismatch|differ"
+  - type: no_change
+    path: "**"
