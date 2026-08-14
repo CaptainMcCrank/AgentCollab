@@ -30,7 +30,8 @@ ROOT = Path(__file__).resolve().parent.parent
 SCENARIOS = Path(__file__).resolve().parent / "scenarios"
 BASE = Path(__file__).resolve().parent / "base-workspace"
 WRONG_ID = "AgentCollab/9.9.9#sha256:deadbeefdeadbeef"
-BUNDLE_ITEMS = ["protocol", "bin", "keys", "PROTOCOL_MANIFEST.yaml", "VERSION"]
+BUNDLE_ITEMS = ["protocol", "bin", "keys", "PROTOCOL_MANIFEST.yaml",
+                "PROTOCOL_MANIFEST.yaml.sig", "VERSION"]
 # Paths a subject may legitimately write during any scenario:
 DIFF_EXCLUDE = ("OUTPUT.md", ".conformance/*", "logs/*", "WORK.md")
 
@@ -140,7 +141,15 @@ def grade(target):
     out_path = target / "OUTPUT.md"
     if not out_path.exists():
         die(f"no OUTPUT.md in {target} — save the subject's session output there first")
-    text = out_path.read_text()
+    # The protocol's own D4 makes the session log the durable home of protocol
+    # records, so grading reads the subject's NEW session-log files (in name
+    # order) ahead of OUTPUT.md. Files that shipped with the scenario are the
+    # sender's, not the subject's, and are excluded.
+    shipped = {p.name for src in (BASE, SCENARIOS / meta["scenario"] / "workspace")
+               if (src / "logs").is_dir() for p in (src / "logs").iterdir()}
+    new_logs = sorted(p for p in (target / "logs").glob("*")
+                      if p.is_file() and p.name not in shipped)
+    text = "\n\n".join([p.read_text() for p in new_logs] + [out_path.read_text()])
     blocks = parse_output(lint, text)
     current = tree_hashes(target)
     baseline = meta["baseline"]

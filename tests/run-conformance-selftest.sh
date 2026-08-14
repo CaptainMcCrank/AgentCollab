@@ -37,6 +37,16 @@ for d in "$REPO"/conformance/scenarios/*/; do
     [ "$rc" -ne 0 ] && sed 's/^/    /' "$W/$sid.log"
 done
 
+# Session-log grading: blocks written to logs/ (per control D4) count even
+# when OUTPUT.md is empty — the claude -p final-message-only case.
+ws="$W/logsgrade"
+python3 "$RUN" prepare S02 --dir "$ws" >/dev/null
+pid=$(python3 -c "import json,sys;print(json.load(open(sys.argv[1]))['protocol_id'])" "$ws/.conformance/meta.json")
+sed "s|{{PROTOCOL_ID}}|$pid|g" "$REPO/conformance/transcripts/S02.md" > "$ws/logs/2026-08-13_reviewer-session.md"
+: > "$ws/OUTPUT.md"
+python3 "$RUN" grade --dir "$ws" >/dev/null 2>&1
+run_case "blocks in session log grade without OUTPUT.md content" 0 $?
+
 # Negative 1: blockless output must fail S01
 ws="$W/neg1"
 python3 "$RUN" prepare S01 --dir "$ws" >/dev/null
