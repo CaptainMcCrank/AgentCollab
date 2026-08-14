@@ -8,7 +8,7 @@ This tutorial shows you how to set up two AI agents that follow the AgentCollab 
 
 **Action.** I wrote the shared rules for agent collaboration into one document and published it as AgentCollab. The protocol includes a handshake. Each agent computes an identifier from the protocol files with a small script. When any byte in those files changes, the identifier changes with it. Agents exchange the identifier before the first edit, and a maintainer signature lets each agent confirm that its copy of the rules is authentic.
 
-**Result.** A divergence now stops the session before an edit happens. Each agent can prove that it holds the same signed rules as its partner. A wrong claim in a handoff surfaces during the receiver's inventory step and becomes a recorded conflict.
+**Result.** The handshake catches an agent that holds stale or altered rules before that agent edits a file. Each agent can prove that it holds the same signed rules as its partner. When a handoff contains a wrong claim, the receiver finds the error during the inventory step and records it as a conflict.
 
 ## What you will build
 
