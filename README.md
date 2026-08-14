@@ -20,7 +20,7 @@ Born from real multi-agent incidents: two sessions colliding undetected on one r
 
 **Problem.** Two AI agents share one repository across sessions. Each behaves as if the other follows the same rules for handoffs, conflicts, and ownership — and nothing checks that assumption.
 
-**Agitation.** The assumption fails silently. This protocol's incident record began with two sessions colliding undetected in a single repo, and a stale "already exists" claim entering the next session as fact; the damage surfaced days later. A prose instruction to "follow the protocol" cannot be verified, a locally modified copy of the rules still calls itself v1.0, and every artifact built downstream of mismatched rules inherits the divergence.
+**Agitation.** When agents assume shared rules instead of confirming them, their collaboration failures are silent. One agent overwrites work another agent owns. A stale claim in a handoff note becomes the next session's ground truth, and every edit built on it compounds the error. A prose instruction to "follow the protocol" cannot be verified, and a modified copy of the rules still calls itself v1.0.
 
 **Resolution.** Make the rules themselves verifiable. Two agents agree they're using this protocol the way two TLS peers agree on a cipher suite — by exchanging a compact identifier, not by trusting prose:
 
