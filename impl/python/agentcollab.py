@@ -103,18 +103,23 @@ def _verify_signature(root_dir, errors):
         errors.append("ssh-keygen not available: L2 cannot be checked on this host "
                       "(rerun with --no-sig for L1, or verify on a host with OpenSSH >= 8.1)")
         return
-    principal = next((line.split()[0] for line in signers.read_text().splitlines()
-                      if line.strip() and not line.startswith("#")), None)
-    if principal is None:
+    # During key rotation allowed_signers lists several principals; the
+    # signature is valid if it verifies for any of them.
+    principals = list(dict.fromkeys(
+        line.split()[0] for line in signers.read_text().splitlines()
+        if line.strip() and not line.startswith("#")))
+    if not principals:
         errors.append("no principal found in keys/allowed_signers")
         return
-    result = subprocess.run(
-        ["ssh-keygen", "-Y", "verify", "-f", str(signers), "-I", principal,
-         "-n", NAMESPACE, "-s", str(sig)],
-        stdin=open(root_dir / MANIFEST, "rb"),
-        capture_output=True)
-    if result.returncode != 0:
-        errors.append(f"manifest signature INVALID for principal '{principal}'")
+    for principal in principals:
+        result = subprocess.run(
+            ["ssh-keygen", "-Y", "verify", "-f", str(signers), "-I", principal,
+             "-n", NAMESPACE, "-s", str(sig)],
+            stdin=open(root_dir / MANIFEST, "rb"),
+            capture_output=True)
+        if result.returncode == 0:
+            return
+    errors.append("manifest signature INVALID for every listed principal")
 
 
 def verify(root_dir, check_sig=True):

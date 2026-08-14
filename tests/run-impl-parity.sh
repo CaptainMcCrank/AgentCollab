@@ -51,5 +51,25 @@ if [ "$HAVE_NODE" -eq 1 ]; then
     eq "js tampered ID matches shell" "$t_sh" "$(node "$REPO/impl/js/agentcollab.mjs" id --root "$W")"
 fi
 
+# --- key rotation: two-key trust store, signature from the SECOND key --------
+R="$W/rot"; mkdir -p "$R/keys"
+cp -R "$REPO/protocol" "$R/protocol"
+cp "$REPO/PROTOCOL_MANIFEST.yaml" "$REPO/VERSION" "$R/"
+ssh-keygen -q -t ed25519 -N '' -C decoy -f "$W/decoykey" </dev/null
+ssh-keygen -q -t ed25519 -N '' -C rot -f "$W/rotkey" </dev/null
+{
+    printf 'decoy@example ';  cut -d' ' -f1-2 "$W/decoykey.pub"
+    printf 'rotated@example '; cut -d' ' -f1-2 "$W/rotkey.pub"
+} > "$R/keys/allowed_signers"
+( cd "$R" && ssh-keygen -Y sign -f "$W/rotkey" -n agentcollab-manifest \
+      PROTOCOL_MANIFEST.yaml >/dev/null 2>&1 )
+mkdir -p "$R/bin" && cp "$REPO/bin/acp-verify.sh" "$REPO/bin/acp-id.sh" "$R/bin/" && chmod +x "$R/bin/"*.sh
+
+( cd "$R" && ./bin/acp-verify.sh >/dev/null 2>&1 ) && ok "shell verifies with second-listed key (rotation)" || ko "shell rotation verify failed"
+python3 "$REPO/impl/python/agentcollab.py" verify --root "$R" >/dev/null 2>&1 && ok "python verifies with second-listed key (rotation)" || ko "python rotation verify failed"
+if [ "$HAVE_NODE" -eq 1 ]; then
+    node "$REPO/impl/js/agentcollab.mjs" verify --root "$R" >/dev/null 2>&1 && ok "js verifies with second-listed key (rotation)" || ko "js rotation verify failed"
+fi
+
 printf 'RESULT pass=%d fail=%d skip=%d\n' "$pass" "$fail" "$skip"
 [ "$fail" -eq 0 ]

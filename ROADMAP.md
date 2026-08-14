@@ -38,7 +38,9 @@ Shipped under `distribution/`: the Claude Code skill (`claude-code-skill/agentco
 **Steps:** skill first (fastest, this ecosystem) → MCP server → llms.txt → announce.
 **Version impact:** none. **Effort:** skill in one session; MCP server one more. Depends on item 3 for the MCP path.
 
-## 5. Governance, key rotation, and fork guidance
+## 5. Governance, key rotation, and fork guidance — SHIPPED
+
+Shipped: `GOVERNANCE.md` (spec-change process, key rotation and compromise revocation with the anchor-page-first recovery model and its trusted-timestamp caveat, six-month abandonment policy with fork-as-succession, fork rules, and the same-trust-store scoping of "higher signed version wins"), referenced from the README. Verifiers in all three implementations now accept a signature from any principal listed in `allowed_signers` (rotation support, regression-tested). Remaining for v1.1.0: make the fork-prefix rule normative in `Handshake.md`.
 
 **Goal:** answer the questions a serious adopter asks about a one-person protocol before depending on it.
 **Deliverables:** `GOVERNANCE.md` covering: how spec changes are proposed and accepted; the key-rotation and revocation procedure (and what happens to old releases' verifiability); the bus-factor plan (second anchor, successor key policy); explicit fork guidance (forks change the ID automatically — forkers must also change the `AgentCollab` prefix); a statement scoping "higher signed version wins" to same-maintainer bundles.

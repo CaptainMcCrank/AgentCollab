@@ -81,21 +81,28 @@ function verifySignature(rootDir, errors) {
     errors.push("trust store keys/allowed_signers not found");
     return;
   }
-  const principal = readFileSync(signers, "utf8").split("\n")
-    .find((l) => l.trim() && !l.startsWith("#"))?.split(/\s+/)[0];
-  if (!principal) {
+  // During key rotation allowed_signers lists several principals; the
+  // signature is valid if it verifies for any of them.
+  const principals = [...new Set(readFileSync(signers, "utf8").split("\n")
+    .filter((l) => l.trim() && !l.startsWith("#"))
+    .map((l) => l.split(/\s+/)[0]))];
+  if (principals.length === 0) {
     errors.push("no principal found in keys/allowed_signers");
     return;
   }
-  const result = spawnSync("ssh-keygen",
-    ["-Y", "verify", "-f", signers, "-I", principal, "-n", NAMESPACE, "-s", sig],
-    { input: readFileSync(join(rootDir, MANIFEST)) });
-  if (result.error && result.error.code === "ENOENT") {
-    errors.push("ssh-keygen not available: L2 cannot be checked on this host " +
-      "(rerun with --no-sig for L1, or verify on a host with OpenSSH >= 8.1)");
-  } else if (result.status !== 0) {
-    errors.push(`manifest signature INVALID for principal '${principal}'`);
+  const manifestBytes = readFileSync(join(rootDir, MANIFEST));
+  for (const principal of principals) {
+    const result = spawnSync("ssh-keygen",
+      ["-Y", "verify", "-f", signers, "-I", principal, "-n", NAMESPACE, "-s", sig],
+      { input: manifestBytes });
+    if (result.error && result.error.code === "ENOENT") {
+      errors.push("ssh-keygen not available: L2 cannot be checked on this host " +
+        "(rerun with --no-sig for L1, or verify on a host with OpenSSH >= 8.1)");
+      return;
+    }
+    if (result.status === 0) return;
   }
+  errors.push("manifest signature INVALID for every listed principal");
 }
 
 export function verify(rootDir, { checkSig = true } = {}) {

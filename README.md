@@ -107,6 +107,8 @@ The handshake proves **integrity and authenticity of the rules**: both agents ho
 
 Any byte change to `protocol/` changes the bundle root and therefore the protocol ID: there are no silent revisions. Releases are semver-tagged, manifest-signed, and (recommended) git-tag-signed. See `Handshake.md` §9.
 
+How the spec changes, how keys rotate or get revoked, what happens if the maintainer disappears, and the rules for forking — including why a higher-version bundle signed by a different key can never win a version dispute — are in [`GOVERNANCE.md`](GOVERNANCE.md).
+
 ## License
 
 Apache-2.0 — see `LICENSE`.

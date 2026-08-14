@@ -85,12 +85,25 @@ if [ "$CHECK_SIG" -eq 1 ]; then
     elif [ ! -f "$SIGNERS" ]; then
         bad "trust store $SIGNERS not found"
     else
-        [ -n "$SIGNER" ] || SIGNER=$(awk '!/^#/ && NF {print $1; exit}' "$SIGNERS")
-        if [ -z "$SIGNER" ]; then
+        # During key rotation allowed_signers lists several principals; the
+        # signature is valid if it verifies for any of them (--signer pins one).
+        if [ -n "$SIGNER" ]; then
+            principals=$SIGNER
+        else
+            principals=$(awk '!/^#/ && NF {print $1}' "$SIGNERS" | sort -u)
+        fi
+        if [ -z "$principals" ]; then
             bad "no principal found in $SIGNERS"
-        elif ! ssh-keygen -Y verify -f "$SIGNERS" -I "$SIGNER" \
-                -n "$NAMESPACE" -s "$SIG" < "$MANIFEST" >/dev/null 2>&1; then
-            bad "manifest signature INVALID for principal '$SIGNER'"
+        else
+            verified=0
+            for p in $principals; do
+                if ssh-keygen -Y verify -f "$SIGNERS" -I "$p" \
+                        -n "$NAMESPACE" -s "$SIG" < "$MANIFEST" >/dev/null 2>&1; then
+                    verified=1
+                    break
+                fi
+            done
+            [ "$verified" -eq 1 ] || bad "manifest signature INVALID for every listed principal"
         fi
     fi
 fi
