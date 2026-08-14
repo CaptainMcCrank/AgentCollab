@@ -178,8 +178,8 @@ def grade(target):
             inst = first_valid(lint, blocks, "inventory") or next(
                 (i for c, i in blocks if c == "inventory"), None)
             val = "" if inst is None else inst.get("protocol_recomputed", "")
-            bare = re.sub(r"\s*\[L[0-2]\]$", "", val)
-            ok = bare == meta["protocol_id"]
+            lead = re.match(r"^(\S+)", val)
+            ok = bool(lead) and lead.group(1) == meta["protocol_id"]
             detail = f"inventory declares {val!r}, bundle computes {meta['protocol_id']!r}"
         elif kind == "no_change":
             pat = exp["path"]

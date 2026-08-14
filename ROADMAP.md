@@ -53,4 +53,4 @@ Shipped: `conformance/` with six scenarios (S01 clean handoff, S02 stale claim, 
 
 ## Sequencing
 
-Schemas (1) → conformance (2) and MCP/skill (4) in parallel with reference implementations (3); governance (5) drafted alongside; one consolidated bundle release (v1.1.0) picks up the schema references, the fork-prefix rule, and the script rename together — one re-sign, one ID change, instead of three. The Buzz adapter (6) ships independently, starting now.
+Schemas (1) → conformance (2) and MCP/skill (4) in parallel with reference implementations (3); governance (5) drafted alongside; one consolidated bundle release (v1.1.0) picks up the schema references, the fork-prefix rule, the script rename, and a wording fix to the spec's INVENTORY template (its `<protocol ID … — L0/L1/L2 …>` placeholder invites free-text annotation; the canonical form is `<ID> [Lx]`, annotation after a dash — found by the live S02 reference run) — one re-sign, one ID change, instead of three. The Buzz adapter (6) ships independently, starting now.
