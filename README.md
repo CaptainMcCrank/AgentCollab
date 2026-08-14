@@ -33,23 +33,23 @@ The scripts exist because a language model cannot compute SHA-256: any protocol 
 
 ## The rules agents agree to
 
-The spec is normative; this is the digest. An agent operating under this protocol commits to the following, in the order they bite during a session:
+Agents that use this protocol resolve information parity, handoffs, and disagreement through the following rules. The specification in `protocol/` is authoritative; these statements summarize it.
 
-1. **Handshake before mutation.** Compute the protocol ID with `bin/acp-id.sh` and match it against your counterparty's declared ID. A mismatch or a missing ID is a CONFLICT; nothing is edited until it resolves. (§B.0, control D6)
-2. **Publish an envelope on exit.** An outgoing session ends with a CONTEXT-HANDOFF envelope — what it did, decisions, assumed pre-state, canonical names, open work — followed by a human-facing USER-HANDOFF block as its true last output. (§A, §A2)
-3. **Never assume missing fields.** A receiver handed an incomplete envelope requests the missing fields or reconstructs them from ground truth and marks them `[reconstructed]`. (D1)
-4. **Inventory before any edit.** The receiver's first output is an INVENTORY report checking every envelope claim against ground truth: present, missing, divergent, unclaimed. Handoff claims are checkable, not authoritative. (§B, D2)
-5. **Precedence when accounts disagree:** ground truth beats the agent's charter, which beats the handoff plan. A plan step contradicting ground truth becomes a CONFLICT, not an action. (§C.2)
-6. **No silent override.** Another agent's work or claim is never discarded without an explicit CONFLICT → RECONCILE record. (§C.1)
-7. **No silent obedience.** An instruction you have evidence is wrong is never executed as written; raise a COUNTER. (§C.1)
-8. **No self-approval.** An agent never approves an action its charter routes to `overseer` or `human`, and never reclassifies an action to a lower tier. (§C.1)
-9. **Information parity.** A negotiating position must cite surfaces both parties can read; a claim resting on unshared context is `[unverifiable]` and cannot win a conflict. (§C.1)
-10. **Conflicts do not evaporate.** Every CONFLICT is frozen as a record and ends in exactly one of: a verifiable RECONCILE, or a filed work item deferring it. (§C.3, D3)
-11. **Escalations are bounded.** A genuine judgment call goes to a human as DEFER-TO-OPERATOR with two resolutions, their costs, and a recommendation — never an open-ended "what should I do?". (§C.4)
-12. **Records persist.** Envelopes, inventories, and conflict records are written to the durable session log, recoverable outside any LLM session. (D4)
-13. **Check for concurrent sessions.** Before mutating, query the work tracker for items claimed by another live agent id; overlap with your planned work is a CONFLICT. (D5)
-14. **Delegate outside your specialization.** Work beyond your charter's specialization or write scopes goes to the owning specialist via DELEGATE, with your findings supplied as constraints. The specialist owns the deliverable; the requester reviews against constraints only. (§E)
-15. **Version disputes resolve by verification.** In a protocol ID mismatch, a bundle that fails `acp-verify.sh` defers to one that passes; between two verified bundles, the higher signed version governs; anything murkier escalates. No mutation happens under a disputed protocol. (§C.5, Handshake §6)
+1. Agents establish protocol agreement before their first edit. Each agent computes the protocol ID with `bin/acp-id.sh` and matches it against its counterparty's declared ID. A mismatch or a missing ID is a CONFLICT, and no mutation happens until it resolves. (§B.0, D6)
+2. An outgoing session publishes a CONTEXT-HANDOFF envelope: completed work, decisions, assumed pre-state, canonical names, and open work. Its final output is the human-facing USER-HANDOFF block. (§A, §A2)
+3. A receiver requests missing envelope fields, or reconstructs them from ground truth and marks them `[reconstructed]`. It never assumes them. (D1)
+4. A receiver's first output is an INVENTORY report that checks every envelope claim against ground truth: present, missing, divergent, or unclaimed. Envelope claims are checkable, never authoritative. (§B, D2)
+5. When accounts disagree, ground truth outranks the agent's charter, and the charter outranks the handoff plan. A plan step that contradicts ground truth becomes a CONFLICT rather than an action. (§C.2)
+6. An agent discards another agent's work or claim only through an explicit CONFLICT → RECONCILE record. (§C.1)
+7. An agent that has evidence an instruction is wrong raises a COUNTER instead of executing it. (§C.1)
+8. An agent never approves an action its charter routes to `overseer` or `human`, and never reclassifies an action to a lower approval tier. (§C.1)
+9. A negotiating position cites surfaces both parties can read. A claim that rests on unshared context is `[unverifiable]` and cannot win a conflict. (§C.1)
+10. Every CONFLICT is frozen as a record and ends in a verifiable RECONCILE or a filed work item. (§C.3, D3)
+11. A genuine judgment call escalates to a human as a bounded DEFER-TO-OPERATOR question: two candidate resolutions, their costs, and a recommendation. (§C.4)
+12. Envelopes, inventories, and conflict records persist in the durable session log and survive the session that wrote them. (D4)
+13. Before it mutates shared state, an agent queries the work tracker for items claimed by another live agent; overlap with its planned work is a CONFLICT. (D5)
+14. Work outside an agent's specialization or write scopes goes to the owning specialist through a DELEGATE block, with the requester's findings supplied as constraints. The specialist owns the deliverable, and the requester reviews it against those constraints only. (§E)
+15. A protocol version dispute resolves by verification: a bundle that fails `acp-verify.sh` defers to one that passes, and between two verified bundles the higher signed version governs. No agent mutates under a disputed protocol. (§C.5, Handshake §6)
 
 ## Importing
 
