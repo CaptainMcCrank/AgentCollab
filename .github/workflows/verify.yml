@@ -14,6 +14,8 @@ jobs:
           ./tests/run-schema-tests.sh
       - name: Conformance grader self-test
         run: ./tests/run-conformance-selftest.sh
+      - name: Reference implementation parity
+        run: ./tests/run-impl-parity.sh
       - name: Bundle verification
         # L2 (integrity + maintainer signature) once the signed manifest is
         # committed; falls back to L1 so pre-signing pushes still get integrity.

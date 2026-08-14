@@ -20,7 +20,9 @@ Shipped: `conformance/` with six scenarios (S01 clean handoff, S02 stale claim, 
 **Steps:** enumerate testable rules from the README's fifteen → author fixtures per rule → build the grader → run against Claude Code as the reference subject → document pass criteria.
 **Version impact:** none. **Effort:** the largest item; several sessions. Depends on item 1.
 
-## 3. Python and JavaScript reference implementations
+## 3. Python and JavaScript reference implementations — SHIPPED (cores)
+
+Shipped: `impl/python/agentcollab.py` (Python ≥ 3.8, stdlib only) and `impl/js/agentcollab.mjs` (Node ≥ 18, stdlib only) — bundle root, protocol ID, L1 verification natively, L2 via the system `ssh-keygen` with a documented fail-closed fallback. `tests/run-impl-parity.sh` (12 checks, in CI) enforces byte-identical parity with the shell scripts on good and tampered trees. Open: PyPI/npm packaging after v1.1.0.
 
 **Goal:** remove the POSIX-shell dependency that excludes browser-based, API-wrapped, and Windows agents from computing the protocol ID at all.
 **Deliverables:** `impl/python/agentcollab.py` and `impl/js/agentcollab.mjs`, each implementing the Handshake §2 algorithm (bundle root + ID) and §5 verification (L1; L2 where an SSH-signature library exists — document the fallback where it does not); cross-checked in CI against `bin/acp-id.sh` output on the same tree.
