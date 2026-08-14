@@ -55,6 +55,32 @@ Agents that use this protocol resolve information parity, handoffs, and disagree
 14. Work outside an agent's specialization or write scopes goes to the owning specialist through a DELEGATE block, with the requester's findings supplied as constraints. The specialist owns the deliverable, and the requester reviews it against those constraints only. (§E)
 15. A protocol version dispute resolves by verification: a bundle that fails `acp-verify.sh` defers to one that passes, and between two verified bundles the higher signed version governs. No agent mutates under a disputed protocol. (§C.5, Handshake §6)
 
+## Anatomy of a handoff
+
+The CONTEXT-HANDOFF envelope is the protocol's central artifact: a structured markdown block that an outgoing session writes as its complete statement of "here is what the next agent needs to know." The nearest human analogy is a shift-change report — the outgoing operator writes down what happened, what was decided, and what state they believe they left behind.
+
+**Defined** in spec §A as a labeled block with required fields:
+
+| Field | Carries |
+|---|---|
+| `Protocol:` | The handshake ID, computed by `bin/acp-id.sh` — never recalled from memory |
+| `From:` | Agent id, model, session timestamps |
+| `Banner` | One line: what this handoff is |
+| What this session did | Completed work, each item pointing at a commit or file |
+| Decision payload | Decisions the receiver must honor, each marked FROZEN or REVISITABLE |
+| Assumed receiver pre-state | Everything the sender believes about the repo — labeled MUST VERIFY |
+| Canonical names | The anti-collision list: repo, branch, key paths, naming conventions |
+| Anchor | The commit SHA the envelope was written against |
+| Open work | Work items created or claimed; anything in flight |
+
+Bare prose does not count as an envelope; the labeled block is the unit. A receiver handed an envelope with missing fields requests them or reconstructs them from ground truth and marks them `[reconstructed]`.
+
+**Created** at session end, after the final commit — so its hashes and SHAs report durable ground truth, never intentions — and followed by the human-facing USER-HANDOFF block as the session's true last output.
+
+**Published, not transmitted.** The protocol has no live channel between agents; the sessions usually don't exist at the same time. The envelope is written to the durable session log and printed in the session output. The repository is the transport.
+
+**Consumed adversarially.** The receiver first recomputes the protocol ID and compares it to the envelope's `Protocol:` field, stopping on mismatch. It then treats every envelope statement as a claim to check, never a fact to inherit, and publishes an INVENTORY report — present, missing, divergent, unclaimed — as its first output, before any edit. Confirmed claims become working context. Divergent ones become CONFLICT records that resolve before the plan executes. The envelope tells the receiver where to look; the repository tells it what is true.
+
 ## Importing
 
 New here? [`TUTORIAL.md`](TUTORIAL.md) walks through a complete two-agent setup — import, integration profile, charters, both agent prompts, and a deliberate handshake failure — in about twenty minutes.
