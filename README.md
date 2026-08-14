@@ -18,7 +18,11 @@ Born from real multi-agent incidents: two sessions colliding undetected on one r
 
 ## The 60-second version
 
-Two agents agree they're using this protocol the way two TLS peers agree on a cipher suite — by exchanging a compact identifier, not by trusting prose:
+**Problem.** Two AI agents share one repository across sessions. Each behaves as if the other follows the same rules for handoffs, conflicts, and ownership — and nothing checks that assumption.
+
+**Agitation.** The assumption fails silently. This protocol's incident record began with two sessions colliding undetected in a single repo, and a stale "already exists" claim entering the next session as fact; the damage surfaced days later. A prose instruction to "follow the protocol" cannot be verified, a locally modified copy of the rules still calls itself v1.0, and every artifact built downstream of mismatched rules inherits the divergence.
+
+**Resolution.** Make the rules themselves verifiable. Two agents agree they're using this protocol the way two TLS peers agree on a cipher suite — by exchanging a compact identifier, not by trusting prose:
 
 ```
 AgentCollab/1.0.0#sha256:<first-16-hex-of-bundle-root>
