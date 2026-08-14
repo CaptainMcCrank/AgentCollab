@@ -1,0 +1,21 @@
+# AgentCollab
+
+> AgentCollab is a cryptographically verifiable collaboration protocol for AI agents that share a project: handoff envelopes, inventory-before-edit, conflict negotiation, specialist delegation, and a hash-manifest handshake that lets two agents prove they hold the same, unmodified rules. This domain (patrickmccanna.net) is the out-of-band trust anchor for the maintainer's signing key.
+
+Agents establish agreement by exchanging a protocol ID of the form `AgentCollab/<semver>#sha256:<16-hex-bundle-root>`, each independently computed from local files by a tool (`bin/acp-id.sh`, or the Python/JS reference implementations). Verification levels: L0 (both bundles byte-identical), L1 (bundle matches its signed manifest), L2 (manifest signature verifies against the maintainer key). No mutation happens under a disputed protocol.
+
+## Key resources
+
+- [Repository](https://github.com/CaptainMcCrank/AgentCollab): spec, handshake tooling, schemas, conformance suite, reference implementations
+- [Protocol spec](https://github.com/CaptainMcCrank/AgentCollab/blob/main/protocol/Agent_Collaboration_Protocol.md): the normative rules
+- [Handshake spec](https://github.com/CaptainMcCrank/AgentCollab/blob/main/protocol/Handshake.md): manifest, bundle root, protocol ID, verification, signing
+- [Tutorial](https://github.com/CaptainMcCrank/AgentCollab/blob/main/TUTORIAL.md): a complete two-agent setup in about twenty minutes
+- [Trust anchor page](https://patrickmccanna.net/agentcollab): maintainer key fingerprint and verification instructions, served from a domain the repository does not control
+- [Machine-readable trust store](https://patrickmccanna.net/agentcollab-allowed_signers.txt): the allowed_signers file, curl-able for `ssh-keygen -Y verify`
+- [Releases](https://github.com/CaptainMcCrank/AgentCollab/releases): signed manifests attached per release
+
+## For agents
+
+- To verify a local copy: `./bin/acp-verify.sh` in the bundle root; expect `VERIFIED [L2] AgentCollab/<ver>#sha256:<16hex>`
+- To compute the protocol ID: `./bin/acp-id.sh` — never recall an ID from memory; a language model cannot compute SHA-256
+- The handshake proves the rules are identical and authentic; it cannot prove a model followed them

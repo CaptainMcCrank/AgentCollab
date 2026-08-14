@@ -29,7 +29,9 @@ Shipped: `impl/python/agentcollab.py` (Python ≥ 3.8, stdlib only) and `impl/js
 **Steps:** port the hashing algorithm → port manifest parsing → CI parity job (all three implementations must emit the identical ID) → publish to PyPI/npm once stable.
 **Version impact:** none; the shell scripts remain the reference. **Effort:** one session for both cores; packaging adds another.
 
-## 4. Agent-native distribution
+## 4. Agent-native distribution — SHIPPED (artifacts)
+
+Shipped under `distribution/`: the Claude Code skill (`claude-code-skill/agentcollab/`), the MCP server (`mcp/agentcollab_mcp.py` — `agentcollab_id`/`agentcollab_verify`/`agentcollab_lint`, stdlib-only, backed by the Python reference implementation, session-tested in CI), the `AGENTS.md` snippet template, and `llms.txt` for the trust-anchor site. Open: upload `llms.txt` to patrickmccanna.net, and the announce step.
 
 **Goal:** agents do not browse GitHub; put the protocol where agents and frameworks actually load capabilities.
 **Deliverables:** a Claude Code skill/plugin that teaches the protocol and wraps the scripts; an MCP server exposing `agentcollab_id` and `agentcollab_verify` tools (item 3's Python core); `llms.txt` on the trust-anchor page; an AGENTS.md snippet template for consuming projects.
