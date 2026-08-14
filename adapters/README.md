@@ -1,5 +1,7 @@
 # Adapters — binding the protocol to your tooling
 
+**Available adapter specs:** [`buzz.md`](buzz.md) — AgentCollab over a [Buzz](https://github.com/block/buzz) Nostr relay: keypair-backed agent identity, envelopes as signed events, and a relay-enforced handshake.
+
 The protocol core (`protocol/`) names five interfaces and never a product: **work tracker**, **session log**, **charter**, **decision record**, **ground truth**. A deployment binds them in a short *integration profile* — one markdown file, kept in the consuming project, that answers "where does each interface live here?" Agents load the profile alongside the protocol.
 
 ## Profile template
