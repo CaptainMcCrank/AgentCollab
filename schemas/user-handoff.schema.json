@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/CaptainMcCrank/AgentCollab/schemas/user-handoff.schema.json",
+  "title": "USER-HANDOFF block (spec §A2), parsed form",
+  "type": "object",
+  "required": ["protocol", "completed", "artifacts", "open_work", "primer"],
+  "properties": {
+    "protocol": {
+      "type": "string",
+      "pattern": "^AgentCollab/[0-9]+\\.[0-9]+\\.[0-9]+#sha256:[0-9a-f]{16}$"
+    },
+    "completed": {
+      "type": "string",
+      "pattern": "→"
+    },
+    "artifacts": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["artifact", "sha256", "commit"],
+        "properties": {
+          "artifact": { "type": "string", "minLength": 1 },
+          "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+          "commit": { "type": "string", "minLength": 4 }
+        }
+      }
+    },
+    "open_work": { "type": "string", "minLength": 1 },
+    "primer": { "type": "string", "minLength": 1 }
+  }
+}

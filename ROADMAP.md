@@ -2,7 +2,9 @@
 
 Follow-on work, ordered by leverage. Items marked **bundle** touch files under `protocol/` and therefore change the protocol ID (version bump + re-sign per `Handshake.md` §9); everything else ships without a release.
 
-## 1. JSON Schemas for protocol blocks
+## 1. JSON Schemas for protocol blocks — SHIPPED (tooling tier)
+
+Shipped: `schemas/` (all six blocks), `bin/acp-lint.py` (stdlib-only parser + validator; PyYAML for charters), valid/invalid fixtures under `tests/fixtures/`, and a CI job. Remaining for v1.1.0: reference the schemas from the spec to make them normative.
 
 **Goal:** make every labeled block machine-checkable, so harnesses and frameworks can validate protocol activity instead of trusting prose.
 **Deliverables:** `schemas/` directory with JSON Schema for CONTEXT-HANDOFF, INVENTORY, CONFLICT, DELEGATE, USER-HANDOFF, and the `agent_charter` block; a `bin/acp-lint.sh` (or Python equivalent) that validates a markdown block against its schema; CI job running the linter over the spec's own examples.

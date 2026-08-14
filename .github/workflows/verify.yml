@@ -8,6 +8,10 @@ jobs:
       - uses: actions/checkout@v4
       - name: Handshake fixture tests
         run: ./tests/run-tests.sh
+      - name: Schema lint tests
+        run: |
+          python3 -c "import yaml" 2>/dev/null || pip install --quiet pyyaml
+          ./tests/run-schema-tests.sh
       - name: Bundle verification
         # L2 (integrity + maintainer signature) once the signed manifest is
         # committed; falls back to L1 so pre-signing pushes still get integrity.

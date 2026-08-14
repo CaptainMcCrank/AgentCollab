@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/CaptainMcCrank/AgentCollab/schemas/inventory.schema.json",
+  "title": "INVENTORY report (spec §B), parsed form",
+  "type": "object",
+  "required": ["protocol_recomputed", "present", "missing", "divergent", "unclaimed"],
+  "properties": {
+    "protocol_recomputed": {
+      "type": "string",
+      "pattern": "^AgentCollab/[0-9]+\\.[0-9]+\\.[0-9]+#sha256:[0-9a-f]{16}( \\[L[0-2]\\])?$"
+    },
+    "present": { "type": "string", "minLength": 1 },
+    "missing": { "type": "string", "minLength": 1 },
+    "divergent": { "type": "string", "minLength": 1 },
+    "unclaimed": { "type": "string", "minLength": 1 }
+  }
+}

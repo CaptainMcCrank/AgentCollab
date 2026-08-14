@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/CaptainMcCrank/AgentCollab/schemas/delegate.schema.json",
+  "title": "DELEGATE block (spec §E), parsed form",
+  "type": "object",
+  "required": ["protocol", "from", "to", "work", "constraints", "not_included", "return"],
+  "properties": {
+    "protocol": {
+      "type": "string",
+      "pattern": "^AgentCollab/[0-9]+\\.[0-9]+\\.[0-9]+#sha256:[0-9a-f]{16}$"
+    },
+    "from": { "type": "string", "minLength": 1 },
+    "to": { "type": "string", "minLength": 1 },
+    "work": { "type": "string", "minLength": 1 },
+    "constraints": { "type": "string", "minLength": 1 },
+    "not_included": { "type": "string", "minLength": 1 },
+    "return": { "type": "string", "minLength": 1 }
+  }
+}

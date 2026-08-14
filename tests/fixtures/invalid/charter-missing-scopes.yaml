@@ -1,0 +1,12 @@
+agent_charter:
+  version: 1.0
+  id: writer-agent-v1.0
+  specialization: >
+    Drafting user documentation for this project.
+  approval:
+    autonomous: [draft docs]
+    overseer: []
+    human: [delete any file]
+  handoff:
+    on_exit: context_handoff
+    on_receive: inventory_first

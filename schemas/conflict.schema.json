@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/CaptainMcCrank/AgentCollab/schemas/conflict.schema.json",
+  "title": "CONFLICT record (spec §C.3), parsed form",
+  "type": "object",
+  "required": ["protocol", "claim_a", "claim_b", "ground_truth_check", "resolution"],
+  "properties": {
+    "protocol": {
+      "type": "string",
+      "pattern": "^AgentCollab/[0-9]+\\.[0-9]+\\.[0-9]+#sha256:[0-9a-f]{16}$"
+    },
+    "claim_a": { "type": "string", "minLength": 1 },
+    "claim_b": { "type": "string", "minLength": 1 },
+    "ground_truth_check": { "type": "string", "minLength": 1 },
+    "resolution": {
+      "type": "string",
+      "pattern": "^(RECONCILE|DEFER-TO-OPERATOR)\\b.+"
+    }
+  }
+}

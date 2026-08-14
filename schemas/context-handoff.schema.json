@@ -1,0 +1,34 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/CaptainMcCrank/AgentCollab/schemas/context-handoff.schema.json",
+  "title": "CONTEXT-HANDOFF envelope (spec §A), parsed form",
+  "type": "object",
+  "required": ["protocol", "from", "banner", "sections"],
+  "properties": {
+    "protocol": {
+      "type": "string",
+      "pattern": "^AgentCollab/[0-9]+\\.[0-9]+\\.[0-9]+#sha256:[0-9a-f]{16}$"
+    },
+    "from": { "type": "string", "minLength": 1 },
+    "banner": { "type": "string", "minLength": 1 },
+    "sections": {
+      "type": "object",
+      "required": [
+        "what_this_session_did",
+        "decision_payload",
+        "assumed_receiver_pre_state",
+        "canonical_names",
+        "anchor",
+        "open_work"
+      ],
+      "properties": {
+        "what_this_session_did": { "type": "array", "minItems": 1, "items": { "type": "string", "minLength": 1 } },
+        "decision_payload": { "type": "array", "minItems": 1, "items": { "type": "string", "minLength": 1 } },
+        "assumed_receiver_pre_state": { "type": "array", "minItems": 1, "items": { "type": "string", "minLength": 1 } },
+        "canonical_names": { "type": "array", "minItems": 1, "items": { "type": "string", "minLength": 1 } },
+        "anchor": { "type": "array", "minItems": 1, "items": { "type": "string", "minLength": 1 } },
+        "open_work": { "type": "array", "minItems": 1, "items": { "type": "string", "minLength": 1 } }
+      }
+    }
+  }
+}
