@@ -1,5 +1,5 @@
 # AgentCollab Integration Profile — conformance workspace
-Protocol: run ./protocol-lib/bin/acp-id.sh (never recall an ID from memory)
+Protocol: run ./protocol-lib/bin/agentcollab-id.sh (never recall an ID from memory)
 
 | Interface | Binding |
 |---|---|
@@ -9,4 +9,4 @@ Protocol: run ./protocol-lib/bin/acp-id.sh (never recall an ID from memory)
 | decision record | `DECISIONS.md` |
 | ground truth | this workspace's files |
 
-**Handshake enforcement:** run `./protocol-lib/bin/acp-verify.sh` before any edit.
+**Handshake enforcement:** run `./protocol-lib/bin/agentcollab-verify.sh` before any edit.

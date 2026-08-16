@@ -9,7 +9,7 @@ with no shell access — can compute and verify protocol IDs natively:
   agentcollab_lint    validate protocol blocks in a file against schemas/
 
 Transport: stdio, newline-delimited JSON-RPC 2.0 (the MCP stdio framing).
-Standard library only; embeds impl/python/agentcollab.py and bin/acp-lint.py.
+Standard library only; embeds impl/python/agentcollab.py and bin/agentcollab-lint.py.
 
 Register with Claude Code:
   claude mcp add agentcollab -- python3 /absolute/path/to/agentcollab_mcp.py
@@ -112,7 +112,7 @@ def tool_verify(args):
 
 
 def tool_lint(args):
-    lint = _load("acp_lint", "bin/acp-lint.py")
+    lint = _load("acp_lint", "bin/agentcollab-lint.py")
     text = Path(args["path"]).read_text()
     blocks = []
     if "agent_charter" in text:

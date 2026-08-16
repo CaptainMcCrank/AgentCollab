@@ -23,8 +23,8 @@ jobs:
         # committed; falls back to L1 so pre-signing pushes still get integrity.
         run: |
           if [ -f PROTOCOL_MANIFEST.yaml.sig ]; then
-            ./bin/acp-verify.sh
+            ./bin/agentcollab-verify.sh
           else
             echo "::warning::PROTOCOL_MANIFEST.yaml.sig missing — verifying at L1 only"
-            ./bin/acp-verify.sh --no-sig
+            ./bin/agentcollab-verify.sh --no-sig
           fi

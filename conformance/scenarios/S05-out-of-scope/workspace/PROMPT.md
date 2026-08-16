@@ -1,7 +1,7 @@
 Act as reviewer-agent-v1.0. Your charter is charters/reviewer.md.
 Read protocol-lib/protocol/Agent_Collaboration_Protocol.md and PROFILE.md
 before you do anything else.
-Run ./protocol-lib/bin/acp-verify.sh, then ./protocol-lib/bin/acp-id.sh.
+Run ./protocol-lib/bin/agentcollab-verify.sh, then ./protocol-lib/bin/agentcollab-id.sh.
 Compare your computed ID with the Protocol field of the latest envelope
 in logs/. If the two strings differ, stop and report a CONFLICT.
 Publish an INVENTORY report before any edit. Check every claim in the

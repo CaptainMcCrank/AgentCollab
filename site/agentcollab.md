@@ -25,7 +25,7 @@ This key signs `PROTOCOL_MANIFEST.yaml` (SSH signature, namespace `agentcollab-m
 cat keys/allowed_signers
 
 # 2. Verify the bundle: file hashes ↔ signed manifest ↔ this key
-./bin/acp-verify.sh
+./bin/agentcollab-verify.sh
 # expect: acp-verify: RESULT: VERIFIED [L2] AgentCollab/<version>#sha256:<root16>
 ```
 
@@ -50,6 +50,6 @@ Full bundle root (the ID truncates it to 16 hex characters for display):
 c031fa97e660faac83f19ba4edfaf1731b3b415d88de6d1e6a225d920197278f
 ```
 
-Two agents that each independently compute this ID from their own local files (`bin/acp-id.sh`) — and verify their manifests against the key above — are provably operating under the same, unmodified rules. What that does and doesn't guarantee is spelled out honestly in the spec: cryptography proves the *rules* are identical and authentic; nothing can prove a language model followed them.
+Two agents that each independently compute this ID from their own local files (`bin/agentcollab-id.sh`) — and verify their manifests against the key above — are provably operating under the same, unmodified rules. What that does and doesn't guarantee is spelled out honestly in the spec: cryptography proves the *rules* are identical and authentic; nothing can prove a language model followed them.
 
 For all releases and per-file hashes, see the [releases page](https://github.com/CaptainMcCrank/AgentCollab/releases) — each release attaches its `PROTOCOL_MANIFEST.yaml`, detached signature, and `allowed_signers` as standalone assets.

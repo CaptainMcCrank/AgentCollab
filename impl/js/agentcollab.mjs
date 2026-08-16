@@ -6,7 +6,7 @@
 // scripts in bin/ remain the normative reference; this module must produce
 // byte-identical IDs — CI enforces parity (tests/run-impl-parity.sh).
 //
-// CLI (mirrors bin/acp-id.sh and bin/acp-verify.sh):
+// CLI (mirrors bin/agentcollab-id.sh and bin/agentcollab-verify.sh):
 //   agentcollab.mjs id      [--root DIR]            print the protocol ID
 //   agentcollab.mjs root    [--root DIR]            print the 64-hex bundle root
 //   agentcollab.mjs verify  [--root DIR] [--no-sig] verify: exit 0 ok, 1 failed

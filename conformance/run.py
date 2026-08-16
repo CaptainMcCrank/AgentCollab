@@ -2,7 +2,7 @@
 """run.py — AgentCollab conformance runner and grader.
 
 The grader is deterministic and LLM-free: it validates the labeled blocks a
-subject emitted (via schemas/ and bin/acp-lint.py) and diffs the workspace
+subject emitted (via schemas/ and bin/agentcollab-lint.py) and diffs the workspace
 against the snapshot taken at prepare time. The subject — the agent under
 test — runs separately, between `prepare` and `grade`.
 
@@ -40,7 +40,7 @@ def die(msg, code=2):
     sys.exit(code)
 
 def load_lint():
-    spec = importlib.util.spec_from_file_location("acp_lint", ROOT / "bin" / "acp-lint.py")
+    spec = importlib.util.spec_from_file_location("acp_lint", ROOT / "bin" / "agentcollab-lint.py")
     mod = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(mod)
     return mod
@@ -56,10 +56,10 @@ def load_scenario(d):
     return yaml.safe_load((d / "scenario.yaml").read_text())
 
 def compute_id(workspace):
-    r = subprocess.run(["./bin/acp-id.sh"], cwd=workspace / "protocol-lib",
+    r = subprocess.run(["./bin/agentcollab-id.sh"], cwd=workspace / "protocol-lib",
                        capture_output=True, text=True)
     if r.returncode != 0:
-        die(f"acp-id.sh failed in workspace bundle: {r.stderr.strip()}")
+        die(f"agentcollab-id.sh failed in workspace bundle: {r.stderr.strip()}")
     return r.stdout.strip().splitlines()[0]
 
 def tree_hashes(workspace):

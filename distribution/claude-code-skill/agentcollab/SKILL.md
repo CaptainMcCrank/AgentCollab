@@ -9,8 +9,8 @@ You are operating under the AgentCollab protocol: a shared, cryptographically ve
 
 ## The handshake (before any file edit)
 
-1. Run `$BUNDLE/bin/acp-verify.sh` — expect `VERIFIED [L2] AgentCollab/<ver>#sha256:<16hex>`. L1 with a stated reason is acceptable only if the project's integration profile says so.
-2. Run `$BUNDLE/bin/acp-id.sh` and record the output. This is the only legitimate source of a protocol ID — never echo a counterparty's ID and never recall one from memory; an ID not produced by a tool run is fabricated.
+1. Run `$BUNDLE/bin/agentcollab-verify.sh` — expect `VERIFIED [L2] AgentCollab/<ver>#sha256:<16hex>`. L1 with a stated reason is acceptable only if the project's integration profile says so.
+2. Run `$BUNDLE/bin/agentcollab-id.sh` and record the output. This is the only legitimate source of a protocol ID — never echo a counterparty's ID and never recall one from memory; an ID not produced by a tool run is fabricated.
 3. Compare your computed ID with the `Protocol:` field of the latest envelope in the session log. Equal → proceed. Unequal or missing → record a CONFLICT per spec §C.5 and make no mutation until it resolves.
 
 If the shell tools are unavailable, use the `agentcollab_id` / `agentcollab_verify` MCP tools, or `python3 $BUNDLE/../impl/python/agentcollab.py id --root $BUNDLE` where the full repo is vendored.
@@ -21,7 +21,7 @@ Order is mandatory: handshake (above) → read your own charter → survey groun
 
 ```markdown
 ## INVENTORY
-**Protocol (recomputed):** <acp-id.sh output> [L2]
+**Protocol (recomputed):** <agentcollab-id.sh output> [L2]
 **Present:**   <envelope claims confirmed against ground truth>
 **Missing:**   <claims not found>
 **Divergent:** <claims contradicted by ground truth — quote both sides>
@@ -32,7 +32,7 @@ Envelope claims are checkable, never authoritative: the envelope tells you where
 
 ## Ending a session (spec §A)
 
-Publish a CONTEXT-HANDOFF envelope to the session log and print it, then the human-facing USER-HANDOFF block as the true last output. The envelope's `Protocol:` field carries your `acp-id.sh` output. Report only ground truth already committed — hashes and SHAs, never intentions.
+Publish a CONTEXT-HANDOFF envelope to the session log and print it, then the human-facing USER-HANDOFF block as the true last output. The envelope's `Protocol:` field carries your `agentcollab-id.sh` output. Report only ground truth already committed — hashes and SHAs, never intentions.
 
 ## Standing rules (the ones that bind every turn)
 
@@ -41,6 +41,6 @@ Publish a CONTEXT-HANDOFF envelope to the session log and print it, then the hum
 - Every CONFLICT ends in a logged RECONCILE or a filed work item. Conflicts do not evaporate.
 - Before mutating shared state, check the work tracker for items claimed by another live agent; overlap is a CONFLICT.
 - Work outside your charter's specialization or write scopes is delegated (DELEGATE block, §E) with your findings as constraints — not absorbed.
-- Validate blocks you emit with `python3 $BUNDLE/../bin/acp-lint.py <file>` (or the `agentcollab_lint` MCP tool) where the full repo is vendored.
+- Validate blocks you emit with `python3 $BUNDLE/../bin/agentcollab-lint.py <file>` (or the `agentcollab_lint` MCP tool) where the full repo is vendored.
 
 Full formats and controls: `$BUNDLE/protocol/Agent_Collaboration_Protocol.md`; handshake normative detail: `$BUNDLE/protocol/Handshake.md`.

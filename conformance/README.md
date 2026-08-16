@@ -27,7 +27,7 @@ python3 conformance/run.py prepare S02 --dir /tmp/acp-s02
 python3 conformance/run.py grade --dir /tmp/acp-s02
 ```
 
-`prepare` copies the base workspace plus the scenario's overlay, vendors the real protocol bundle (including its signature) into `protocol-lib/`, substitutes the live protocol ID into the fixtures, and snapshots every file. `grade` collects blocks from the subject's **new session-log files plus `OUTPUT.md`** — the protocol's control D4 makes the session log the durable home of protocol records, so blocks written there count fully; this also handles harnesses like `claude -p` whose stdout carries only the final message. Blocks are validated against the schemas, the subject's recomputed ID is checked against a fresh `acp-id.sh` run, and the workspace is diffed against the snapshot. The subject may always write `OUTPUT.md`, `logs/`, and `WORK.md`; every other change is visible to `no_change` checks.
+`prepare` copies the base workspace plus the scenario's overlay, vendors the real protocol bundle (including its signature) into `protocol-lib/`, substitutes the live protocol ID into the fixtures, and snapshots every file. `grade` collects blocks from the subject's **new session-log files plus `OUTPUT.md`** — the protocol's control D4 makes the session log the durable home of protocol records, so blocks written there count fully; this also handles harnesses like `claude -p` whose stdout carries only the final message. Blocks are validated against the schemas, the subject's recomputed ID is checked against a fresh `agentcollab-id.sh` run, and the workspace is diffed against the snapshot. The subject may always write `OUTPUT.md`, `logs/`, and `WORK.md`; every other change is visible to `no_change` checks.
 
 ## Scoring
 

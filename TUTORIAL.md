@@ -32,13 +32,13 @@ Run these commands in your project directory:
 ```sh
 git init
 git clone https://github.com/CaptainMcCrank/AgentCollab protocol-lib
-./protocol-lib/bin/acp-verify.sh
+./protocol-lib/bin/agentcollab-verify.sh
 ```
 
 The last command checks every protocol file against a signed manifest, and it checks the maintainer signature on the manifest itself. The expected output is one line:
 
 ```
-acp-verify: RESULT: VERIFIED [L2] AgentCollab/1.0.1#sha256:ecce17042a867fe9
+acp-verify: RESULT: VERIFIED [L2] AgentCollab/1.1.0#sha256:c262d661c6455de7
 ```
 
 If you want a stricter check, compare the key in `protocol-lib/keys/allowed_signers` with the copy at <https://patrickmccanna.net/agentcollab>. That page lives on a domain that the repository does not control.
@@ -46,7 +46,7 @@ If you want a stricter check, compare the key in `protocol-lib/keys/allowed_sign
 Now compute the protocol ID:
 
 ```sh
-./protocol-lib/bin/acp-id.sh
+./protocol-lib/bin/agentcollab-id.sh
 ```
 
 Keep the output in view. Your two agents will exchange this exact string, and each agent must compute it with this script, because a language model cannot compute a hash in its head.
@@ -57,7 +57,7 @@ The protocol names its tooling interfaces in the abstract, so each project decla
 
 ```markdown
 # AgentCollab Integration Profile — demo project
-Protocol: <paste the output of ./protocol-lib/bin/acp-id.sh>
+Protocol: <paste the output of ./protocol-lib/bin/agentcollab-id.sh>
 
 | Interface | Binding |
 |---|---|
@@ -135,7 +135,7 @@ Paste the prompt below as your first message. When the runtime asks for permissi
 Act as writer-agent-v1.0. Your charter is charters/writer.md.
 Read protocol-lib/protocol/Agent_Collaboration_Protocol.md and PROFILE.md
 before you do anything else.
-Run ./protocol-lib/bin/acp-id.sh and keep the output.
+Run ./protocol-lib/bin/agentcollab-id.sh and keep the output.
 Task: draft docs/GUIDE.md, a short getting-started guide for this project.
 Record your work in WORK.md.
 End the session with a CONTEXT-HANDOFF envelope. Write the envelope to
@@ -146,7 +146,7 @@ The agent drafts the document and closes with an envelope. The envelope looks li
 
 ```markdown
 ## CONTEXT-HANDOFF
-**Protocol:** AgentCollab/1.0.1#sha256:ecce17042a867fe9
+**Protocol:** AgentCollab/1.1.0#sha256:c262d661c6455de7
 **From:** writer-agent-v1.0 · <model> · <timestamps>
 **Banner:** First draft of GUIDE.md, ready for review
 
@@ -170,7 +170,7 @@ Give the new session this prompt:
 Act as reviewer-agent-v1.0. Your charter is charters/reviewer.md.
 Read protocol-lib/protocol/Agent_Collaboration_Protocol.md and PROFILE.md
 before you do anything else.
-Run ./protocol-lib/bin/acp-verify.sh, then ./protocol-lib/bin/acp-id.sh.
+Run ./protocol-lib/bin/agentcollab-verify.sh, then ./protocol-lib/bin/agentcollab-id.sh.
 Compare your computed ID with the Protocol field of the latest envelope
 in logs/. If the two strings differ, stop and report a CONFLICT.
 Publish an INVENTORY report before any edit. Check every claim in the
@@ -184,7 +184,7 @@ Watch the first output of the session. Before the agent touches a file, it must 
 
 ```markdown
 ## INVENTORY
-**Protocol (recomputed):** AgentCollab/1.0.1#sha256:ecce17042a867fe9 [L2]
+**Protocol (recomputed):** AgentCollab/1.1.0#sha256:c262d661c6455de7 [L2]
 **Present:**   docs/GUIDE.md exists with six sections, as claimed
 **Missing:**   none
 **Divergent:** none
@@ -199,8 +199,8 @@ A working failure is worth seeing once. Append a single space to one protocol fi
 
 ```sh
 printf ' ' >> protocol-lib/protocol/Handshake.md
-./protocol-lib/bin/acp-id.sh
-./protocol-lib/bin/acp-verify.sh
+./protocol-lib/bin/agentcollab-id.sh
+./protocol-lib/bin/agentcollab-verify.sh
 ```
 
 The ID in the first output no longer matches any envelope in `logs/`, and the verify script reports FAIL against the signed manifest. Start the reviewer prompt again and it will refuse to edit, then record a conflict with both strings quoted. Repair the file when you finish:
@@ -217,5 +217,5 @@ An ID match proves that both agents read byte-identical rule files. The signatur
 
 - `protocol-lib/protocol/Handshake.md` §6 covers mismatch resolution between versions.
 - `protocol-lib/adapters/README.md` shows bindings for GitHub Issues and other trackers.
-- Wire `acp-verify.sh` into your runtime's session-start hook, and the handshake stops depending on the agent's willingness to run it.
+- Wire `agentcollab-verify.sh` into your runtime's session-start hook, and the handshake stops depending on the agent's willingness to run it.
 - Pin the maintainer key from <https://patrickmccanna.net/agentcollab> before you trust a vendored copy.

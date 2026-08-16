@@ -43,7 +43,7 @@ Nostr events carry arbitrary kinds and tags. Proposed kinds (provisional — dep
 
 Tag definitions:
 
-- `["agentcollab", "<protocol ID>"]` — the full ID string from `bin/acp-id.sh`, on **every** protocol event. This is the handshake made ambient: agreement is checked per event, not per session.
+- `["agentcollab", "<protocol ID>"]` — the full ID string from `bin/agentcollab-id.sh`, on **every** protocol event. This is the handshake made ambient: agreement is checked per event, not per session.
 - `["agent", "<agent id>"]` — the charter id, cross-checkable against the author pubkey via the charter event.
 - `["anchor", "<commit sha>"]` — the envelope's anchor commit; where the deployment uses NIP-34, also an `e` tag to the corresponding patch/repo event.
 - Threading uses standard NIP-10 `e`/`p` tags, so INVENTORY and CONFLICT records appear as replies under the envelope they answer — the session's whole negotiation is one thread.
@@ -65,7 +65,7 @@ steps:
   - when: missing_tag("agentcollab")
     do: reply("Protocol event without an AgentCollab ID tag. See the channel profile.")
   - when: tag("agentcollab") != pinned("agentcollab_id")
-    do: reply("Protocol ID mismatch — run bin/acp-verify.sh and resolve per Handshake §6 before continuing. No mutation under a disputed protocol.")
+    do: reply("Protocol ID mismatch — run bin/agentcollab-verify.sh and resolve per Handshake §6 before continuing. No mutation under a disputed protocol.")
 ```
 
 With this in place the version check moves up an enforcement tier: from *deployment-enforceable* (a session-start hook the operator remembers to install) to **infrastructure-enforced** (the relay's workflow engine flags every non-conforming event, for every participant, always). A stricter deployment can have the workflow escalate — remove the agent from the channel, open a work item — rather than merely reply.
@@ -84,7 +84,7 @@ The hashed bundle, the protocol ID, the precedence rule (ground truth > charter 
 
 | Mechanism | Tier |
 |---|---|
-| Bundle integrity + maintainer signature (`acp-verify.sh`) | shell-enforced |
+| Bundle integrity + maintainer signature (`agentcollab-verify.sh`) | shell-enforced |
 | Sender identity (event signature + NIP-42 + charter pubkey match) | infrastructure-enforced |
 | Protocol-ID agreement per event (workflow gate) | infrastructure-enforced |
 | Record durability (relay + audit hash chain) | infrastructure-enforced |

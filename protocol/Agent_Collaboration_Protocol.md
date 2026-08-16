@@ -56,6 +56,8 @@ Two layers.
 
 Every activity is a labeled block in session output and, where durable, in the session log. Bare prose does not count as having performed an activity.
 
+Each block format has a machine-checkable expression: the JSON Schemas in the repository's `schemas/` directory define the parsed field structure of every labeled block, and `bin/agentcollab-lint.py` is the reference validator. The schemas are normative for machine validation; they live outside the hashed bundle (so tooling can evolve without a release), and where a schema and this document's block formats disagree, this document governs.
+
 **Every labeled block in the cross-session layer carries a `Protocol:` field** — the protocol ID defined in `Handshake.md` (e.g. `AgentCollab/1.0.0#sha256:0123456789abcdef`). This is the compact commitment that both parties are operating under the same rules; §B.0 defines when it must be independently recomputed rather than echoed.
 
 ---
@@ -66,7 +68,7 @@ The outgoing session publishes this before ending. Write it to the session log *
 
 ```markdown
 ## CONTEXT-HANDOFF
-**Protocol:** <protocol ID — computed via bin/acp-id.sh, not from memory>
+**Protocol:** <protocol ID — computed via bin/agentcollab-id.sh, not from memory>
 **From:** <agent id> · <model id> · <session start–end ISO 8601>
 **Banner:** <one line: what this handoff is>
 
@@ -113,7 +115,7 @@ The CONTEXT-HANDOFF envelope (§A) is agent-facing: it transfers context to the 
 started in the project root:
 
     Act as <successor agent / role>. Verify the protocol bundle
-    (bin/acp-verify.sh), read the CONTEXT-HANDOFF envelope in the latest
+    (bin/agentcollab-verify.sh), read the CONTEXT-HANDOFF envelope in the latest
     session log entry, verify the predecessor artifacts listed above
     (<path> @ sha256 <hash>, ...), check the work tracker for open items,
     and begin with your INVENTORY report
@@ -129,7 +131,7 @@ started in the project root:
 
 Order is mandatory:
 
-0. **Establish protocol agreement** (`Handshake.md`) — recompute the protocol ID from your local bundle **by running `bin/acp-id.sh`** (never by echoing the sender's value or recalling it from context), and compare it to the envelope's `Protocol:` field.
+0. **Establish protocol agreement** (`Handshake.md`) — recompute the protocol ID from your local bundle **by running `bin/agentcollab-id.sh`** (never by echoing the sender's value or recalling it from context), and compare it to the envelope's `Protocol:` field.
    - Match → record the ID; it goes in your INVENTORY block.
    - Mismatch, or envelope has no `Protocol:` field → this is a `CONFLICT` (§C.5) and must resolve **before any mutation**.
 1. **Read your charter** — your own `Agent_Charter` block: specialization, scopes, approval boundaries.
@@ -138,12 +140,14 @@ Order is mandatory:
 
 ```markdown
 ## INVENTORY
-**Protocol (recomputed):** <protocol ID from bin/acp-id.sh — L0/L1/L2 per Handshake.md>
+**Protocol (recomputed):** <exact output of bin/agentcollab-id.sh> [L2]
 **Present:**   <envelope claims confirmed against ground truth>
 **Missing:**   <envelope claims not found>
 **Divergent:** <envelope claims contradicted by ground truth — quote both sides>
 **Unclaimed:** <significant ground truth the envelope never mentioned>
 ```
+
+   The `Protocol (recomputed)` field **starts with the script's exact output**, optionally followed by the verification level achieved in brackets (`[L0]`/`[L1]`/`[L2]`, per Handshake.md §5). Any further annotation goes after a dash separator — machine parsers read the leading token, and a field that does not start with the exact ID fails validation.
 
 4. **Route by result** — clean inventory → proceed. Divergences → each becomes a `CONFLICT` (§C) before the plan executes.
 
@@ -191,7 +195,7 @@ Escalate when the conflict is a genuine judgment call (contradicting decision re
 
 A protocol ID mismatch between sender and receiver is a `CONFLICT` with a scripted resolution, defined normatively in `Handshake.md` §Mismatch. Summary:
 
-1. Both parties run `bin/acp-verify.sh` on their own bundle.
+1. Both parties run `bin/agentcollab-verify.sh` on their own bundle.
 2. A party whose bundle **fails verification** (bytes don't match its manifest, or the manifest signature is invalid) defers to a party whose bundle verifies.
 3. If both verify but at **different versions**, the higher version with a valid maintainer signature governs — provided the lower-version party can obtain and verify that bundle. Otherwise: `DEFER-TO-OPERATOR`.
 4. No mutation happens under a disputed protocol.
@@ -235,9 +239,9 @@ Every mechanism in this protocol falls into one of three tiers. Label claims abo
 
 | Tier | Meaning | What sits here |
 |---|---|---|
-| **shell-enforced** | A script exits non-zero without it | `bin/acp-verify.sh` (bundle integrity + signature), `bin/acp-id.sh` (protocol ID) |
+| **shell-enforced** | A script exits non-zero without it | `bin/agentcollab-verify.sh` (bundle integrity + signature), `bin/agentcollab-id.sh` (protocol ID) |
 | **instructed-only** | The protocol requires it; nothing external checks | INVENTORY-before-edit ordering, CONFLICT logging, delegation discipline, that an agent actually *ran* the scripts rather than fabricating output |
-| **deployment-enforceable** | Becomes shell-enforced when a deployment wires it into its harness | Running `acp-verify.sh` in a session-start hook; D5 tracker queries in a pre-push hook |
+| **deployment-enforceable** | Becomes shell-enforced when a deployment wires it into its harness | Running `agentcollab-verify.sh` in a session-start hook; D5 tracker queries in a pre-push hook |
 
 The cryptographic handshake proves **artifact integrity and authenticity** — that both agents reference the same, unmodified, maintainer-signed protocol text. No cryptographic mechanism can prove a language model *followed* that text. What the handshake buys is the elimination of an entire failure class — agents diverging because they held *different rules* — and it converts non-compliance from a silent condition into a detectable, loggable event.
 

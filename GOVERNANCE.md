@@ -26,7 +26,7 @@ Published in `keys/allowed_signers` (in-repo convenience copy), attached to ever
 
 ### Rotation (planned key change)
 
-1. Generate the new key; add its line to `keys/allowed_signers` **alongside** the old one (the file supports multiple entries; `acp-verify.sh` accepts a signature from any listed principal — pass `--signer` to pin one).
+1. Generate the new key; add its line to `keys/allowed_signers` **alongside** the old one (the file supports multiple entries; `agentcollab-verify.sh` accepts a signature from any listed principal — pass `--signer` to pin one).
 2. Update the trust-anchor page: new key added, old key moved to a dated "previous keys" section.
 3. Sign the next release with the new key. Both keys remain listed for a transition window of at least one release cycle, so mid-upgrade consumers verify either.
 4. After the window, remove the old key from `allowed_signers` in a subsequent release. Historical releases stay verifiable forever: each release's attached `allowed_signers` names the key that signed *it*, and the anchor page's key history confirms that key was legitimate for that period.

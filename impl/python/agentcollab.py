@@ -7,7 +7,7 @@ available). Standard library only. The shell scripts in bin/ remain the
 normative reference; this module must produce byte-identical IDs — CI enforces
 parity (tests/run-impl-parity.sh).
 
-CLI (mirrors bin/acp-id.sh and bin/acp-verify.sh):
+CLI (mirrors bin/agentcollab-id.sh and bin/agentcollab-verify.sh):
   agentcollab.py id      [--root DIR]            print the protocol ID
   agentcollab.py root    [--root DIR]            print the full 64-hex bundle root
   agentcollab.py verify  [--root DIR] [--no-sig] verify: exit 0 ok, 1 failed

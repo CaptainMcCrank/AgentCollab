@@ -8,7 +8,7 @@ The protocol core (`protocol/`) names five interfaces and never a product: **wor
 
 ```markdown
 # AgentCollab Integration Profile — <project>
-**Protocol:** <output of bin/acp-id.sh> (bundle vendored at <path>; verify: bin/acp-verify.sh)
+**Protocol:** <output of bin/agentcollab-id.sh> (bundle vendored at <path>; verify: bin/agentcollab-verify.sh)
 
 | Interface | Binding |
 |---|---|
@@ -18,7 +18,7 @@ The protocol core (`protocol/`) names five interfaces and never a product: **wor
 | decision record | <e.g. `DECISIONS.md`, ADR format> |
 | ground truth | <e.g. this git repository + the deployed system at <host>> |
 
-**Handshake enforcement:** <e.g. session-start hook runs `bin/acp-verify.sh`; failures block the session>
+**Handshake enforcement:** <e.g. session-start hook runs `bin/agentcollab-verify.sh`; failures block the session>
 **Local extensions:** <anything this deployment adds on top of the core — extensions may add rules, never weaken core controls D1–D6>
 ```
 

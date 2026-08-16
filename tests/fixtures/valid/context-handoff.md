@@ -1,5 +1,5 @@
 ## CONTEXT-HANDOFF
-**Protocol:** AgentCollab/1.0.1#sha256:ecce17042a867fe9
+**Protocol:** AgentCollab/1.1.0#sha256:c262d661c6455de7
 **From:** writer-agent-v1.0 · claude-fable-5 · 2026-08-13T18:00:00Z–2026-08-13T18:40:00Z
 **Banner:** First draft of GUIDE.md, ready for review
 

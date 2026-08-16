@@ -20,7 +20,7 @@ W=$(mktemp -d); trap 'rm -rf "$W"' EXIT
 
 # --- parity on the real tree -------------------------------------------------
 cd "$REPO"
-sh_id=$(./bin/acp-id.sh);  sh_root=$(./bin/acp-id.sh --root)
+sh_id=$(./bin/agentcollab-id.sh);  sh_root=$(./bin/agentcollab-id.sh --root)
 py_id=$(python3 impl/python/agentcollab.py id); py_root=$(python3 impl/python/agentcollab.py root)
 eq "python ID matches shell" "$sh_id" "$py_id"
 eq "python root matches shell" "$sh_root" "$py_root"
@@ -37,11 +37,11 @@ cp -R "$REPO/protocol" "$REPO/bin" "$REPO/keys" "$W/"
 cp "$REPO/PROTOCOL_MANIFEST.yaml" "$REPO/PROTOCOL_MANIFEST.yaml.sig" "$REPO/VERSION" "$W/"
 printf ' ' >> "$W/protocol/Handshake.md"
 
-( cd "$W" && ./bin/acp-verify.sh >/dev/null 2>&1 ); sh_rc=$?
+( cd "$W" && ./bin/agentcollab-verify.sh >/dev/null 2>&1 ); sh_rc=$?
 python3 "$REPO/impl/python/agentcollab.py" verify --root "$W" >/dev/null 2>&1; py_rc=$?
 eq "shell fails tampered tree with exit 1" "1" "$sh_rc"
 eq "python fails tampered tree with exit 1" "1" "$py_rc"
-t_sh=$( cd "$W" && ./bin/acp-id.sh )
+t_sh=$( cd "$W" && ./bin/agentcollab-id.sh )
 t_py=$(python3 "$REPO/impl/python/agentcollab.py" id --root "$W")
 eq "python tampered ID matches shell" "$t_sh" "$t_py"
 [ "$t_py" != "$sh_id" ] && ok "tampering changes the ID" || ko "tampered ID unchanged"
@@ -63,9 +63,9 @@ ssh-keygen -q -t ed25519 -N '' -C rot -f "$W/rotkey" </dev/null
 } > "$R/keys/allowed_signers"
 ( cd "$R" && ssh-keygen -Y sign -f "$W/rotkey" -n agentcollab-manifest \
       PROTOCOL_MANIFEST.yaml >/dev/null 2>&1 )
-mkdir -p "$R/bin" && cp "$REPO/bin/acp-verify.sh" "$REPO/bin/acp-id.sh" "$R/bin/" && chmod +x "$R/bin/"*.sh
+mkdir -p "$R/bin" && cp "$REPO/bin/agentcollab-verify.sh" "$REPO/bin/agentcollab-id.sh" "$R/bin/" && chmod +x "$R/bin/"*.sh
 
-( cd "$R" && ./bin/acp-verify.sh >/dev/null 2>&1 ) && ok "shell verifies with second-listed key (rotation)" || ko "shell rotation verify failed"
+( cd "$R" && ./bin/agentcollab-verify.sh >/dev/null 2>&1 ) && ok "shell verifies with second-listed key (rotation)" || ko "shell rotation verify failed"
 python3 "$REPO/impl/python/agentcollab.py" verify --root "$R" >/dev/null 2>&1 && ok "python verifies with second-listed key (rotation)" || ko "python rotation verify failed"
 if [ "$HAVE_NODE" -eq 1 ]; then
     node "$REPO/impl/js/agentcollab.mjs" verify --root "$R" >/dev/null 2>&1 && ok "js verifies with second-listed key (rotation)" || ko "js rotation verify failed"

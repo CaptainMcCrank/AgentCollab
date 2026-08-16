@@ -1,5 +1,5 @@
 ## DELEGATE
-**Protocol:** AgentCollab/1.0.1#sha256:ecce17042a867fe9
+**Protocol:** AgentCollab/1.1.0#sha256:c262d661c6455de7
 **From:** reviewer-agent-v1.0 → **To:** writer-agent-v1.0
 **Work:** rewrite section 4 of docs/GUIDE.md around the new screenshots
 **Constraints:** keep code samples under 80 characters; section must stay under one page

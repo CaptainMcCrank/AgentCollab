@@ -13,7 +13,7 @@ Standard JSON Schema (draft 2020-12) for every labeled block the protocol define
 
 ## Parsing conventions
 
-`bin/acp-lint.py` is the reference parser and validator. The mapping it implements:
+`bin/agentcollab-lint.py` is the reference parser and validator. The mapping it implements:
 
 - A block starts at its `## NAME` heading (a trailing counter or subtitle is allowed, as in `## CONFLICT 1`).
 - `**Field:** value` lines become string properties; the field name is lowercased with non-alphanumerics collapsed to `_` (so `**Protocol (recomputed):**` → `protocol_recomputed`). Continuation lines append to the preceding field.
@@ -25,8 +25,8 @@ Standard JSON Schema (draft 2020-12) for every labeled block the protocol define
 ## Validation
 
 ```sh
-python3 bin/acp-lint.py path/to/session-log-entry.md    # validate all blocks found
-python3 bin/acp-lint.py --json file.md                  # also print the parsed JSON
+python3 bin/agentcollab-lint.py path/to/session-log-entry.md    # validate all blocks found
+python3 bin/agentcollab-lint.py --json file.md                  # also print the parsed JSON
 ```
 
 The linter needs only the Python standard library (PyYAML for charters). The schemas are ordinary JSON Schema, so external harnesses can use any standard validator; the linter's built-in checker covers the subset these schemas use: `type`, `required`, `properties`, `items`, `enum`, `pattern`, `minItems`, `minLength`.

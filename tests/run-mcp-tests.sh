@@ -56,7 +56,7 @@ check("initialize returns serverInfo + tools capability",
 names = [t["name"] for t in resp[2]["result"]["tools"]]
 check("tools/list exposes the three tools",
       names == ["agentcollab_id", "agentcollab_verify", "agentcollab_lint"])
-shell_id = subprocess.run([f"{repo}/bin/acp-id.sh"], cwd=repo,
+shell_id = subprocess.run([f"{repo}/bin/agentcollab-id.sh"], cwd=repo,
                           capture_output=True, text=True).stdout.strip()
 check("agentcollab_id matches the shell reference",
       resp[3]["result"]["content"][0]["text"] == shell_id

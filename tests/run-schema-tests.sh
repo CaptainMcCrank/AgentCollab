@@ -5,7 +5,7 @@
 
 set -u
 REPO_DIR=$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)
-LINT="$REPO_DIR/bin/acp-lint.py"
+LINT="$REPO_DIR/bin/agentcollab-lint.py"
 pass=0; fail=0
 
 command -v python3 >/dev/null 2>&1 || { echo "python3 not found"; exit 1; }

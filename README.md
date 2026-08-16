@@ -12,7 +12,7 @@ Born from real multi-agent incidents: two sessions colliding undetected on one r
 | `protocol/Handshake.md` | The cryptographic agreement mechanism: hash manifest, protocol ID, verification levels, signing |
 | `protocol/Agent_Charter.md` | The minimal per-agent declaration (specialization, write scopes, approval tiers) |
 | `PROTOCOL_MANIFEST.yaml` (+ `.sig`) | Lock file: per-file SHA-256, bundle root, protocol ID — signed by the maintainer |
-| `bin/acp-id.sh`, `bin/acp-verify.sh` | Reference implementation: compute the protocol ID; verify integrity + signature |
+| `bin/agentcollab-id.sh`, `bin/agentcollab-verify.sh` | Reference implementation: compute the protocol ID; verify integrity + signature |
 | `adapters/` | How to bind the protocol's tool-agnostic interfaces (work tracker, session log, …) to your stack |
 | `tests/` | Fixture tests proving the verifier accepts a good bundle and rejects a tampered one |
 
@@ -28,9 +28,9 @@ Born from real multi-agent incidents: two sessions colliding undetected on one r
 AgentCollab/1.0.0#sha256:<first-16-hex-of-bundle-root>
 ```
 
-1. The **sender** runs `bin/acp-id.sh` and stamps the ID into its handoff envelope.
-2. The **receiver** runs `bin/acp-id.sh` against *its own* files — never echoing the sender — and compares strings. This must happen **before its first edit**.
-3. Match → both bundles are byte-identical (level **L0**). `bin/acp-verify.sh` upgrades that to **L1** (files match the signed manifest) and **L2** (the manifest signature verifies against the maintainer key) — so two agents in different organizations can trust the match without trusting each other's filesystem.
+1. The **sender** runs `bin/agentcollab-id.sh` and stamps the ID into its handoff envelope.
+2. The **receiver** runs `bin/agentcollab-id.sh` against *its own* files — never echoing the sender — and compares strings. This must happen **before its first edit**.
+3. Match → both bundles are byte-identical (level **L0**). `bin/agentcollab-verify.sh` upgrades that to **L1** (files match the signed manifest) and **L2** (the manifest signature verifies against the maintainer key) — so two agents in different organizations can trust the match without trusting each other's filesystem.
 4. Mismatch → a structured CONFLICT with a scripted resolution (verified bundle beats unverified; higher signed version beats lower; no mutation under a disputed protocol).
 
 The scripts exist because a language model cannot compute SHA-256: any protocol ID not produced by a tool run is fabricated by definition.
@@ -39,7 +39,7 @@ The scripts exist because a language model cannot compute SHA-256: any protocol 
 
 Agents that use this protocol resolve information parity, handoffs, and disagreement through the following rules. The specification in `protocol/` is authoritative; these statements summarize it.
 
-1. Agents establish protocol agreement before their first edit. Each agent computes the protocol ID with `bin/acp-id.sh` and matches it against its counterparty's declared ID. A mismatch or a missing ID is a CONFLICT, and no mutation happens until it resolves. (§B.0, D6)
+1. Agents establish protocol agreement before their first edit. Each agent computes the protocol ID with `bin/agentcollab-id.sh` and matches it against its counterparty's declared ID. A mismatch or a missing ID is a CONFLICT, and no mutation happens until it resolves. (§B.0, D6)
 2. An outgoing session publishes a CONTEXT-HANDOFF envelope: completed work, decisions, assumed pre-state, canonical names, and open work. Its final output is the human-facing USER-HANDOFF block. (§A, §A2)
 3. A receiver requests missing envelope fields, or reconstructs them from ground truth and marks them `[reconstructed]`. It never assumes them. (D1)
 4. A receiver's first output is an INVENTORY report that checks every envelope claim against ground truth: present, missing, divergent, or unclaimed. Envelope claims are checkable, never authoritative. (§B, D2)
@@ -53,7 +53,7 @@ Agents that use this protocol resolve information parity, handoffs, and disagree
 12. Envelopes, inventories, and conflict records persist in the durable session log and survive the session that wrote them. (D4)
 13. Before it mutates shared state, an agent queries the work tracker for items claimed by another live agent; overlap with its planned work is a CONFLICT. (D5)
 14. Work outside an agent's specialization or write scopes goes to the owning specialist through a DELEGATE block, with the requester's findings supplied as constraints. The specialist owns the deliverable, and the requester reviews it against those constraints only. (§E)
-15. A protocol version dispute resolves by verification: a bundle that fails `acp-verify.sh` defers to one that passes, and between two verified bundles the higher signed version governs. No agent mutates under a disputed protocol. (§C.5, Handshake §6)
+15. A protocol version dispute resolves by verification: a bundle that fails `agentcollab-verify.sh` defers to one that passes, and between two verified bundles the higher signed version governs. No agent mutates under a disputed protocol. (§C.5, Handshake §6)
 
 ## Anatomy of a handoff
 
@@ -63,7 +63,7 @@ The CONTEXT-HANDOFF envelope is the protocol's central artifact: a structured ma
 
 | Field | Carries |
 |---|---|
-| `Protocol:` | The handshake ID, computed by `bin/acp-id.sh` — never recalled from memory |
+| `Protocol:` | The handshake ID, computed by `bin/agentcollab-id.sh` — never recalled from memory |
 | `From:` | Agent id, model, session timestamps |
 | `Banner` | One line: what this handoff is |
 | What this session did | Completed work, each item pointing at a commit or file |
@@ -87,7 +87,7 @@ New here? [`TUTORIAL.md`](TUTORIAL.md) walks through a complete two-agent setup 
 
 ```sh
 git submodule add <this-repo-url> protocol-lib     # or vendor a copy
-./protocol-lib/bin/acp-verify.sh                   # L2: integrity + authenticity
+./protocol-lib/bin/agentcollab-verify.sh                   # L2: integrity + authenticity
 ```
 
 Then:
@@ -95,7 +95,7 @@ Then:
 1. Point your agents at the spec: *"Read and follow `protocol-lib/protocol/Agent_Collaboration_Protocol.md` before acting on a handoff; establish agreement per `Handshake.md` before your first mutation."*
 2. Write an integration profile binding the five tool-agnostic interfaces to your stack (template in `adapters/README.md`).
 3. Give each agent an `Agent_Charter` block.
-4. Wire `acp-verify.sh` into your session-start hook so verification is enforced by the harness, not by instruction.
+4. Wire `agentcollab-verify.sh` into your session-start hook so verification is enforced by the harness, not by instruction.
 
 For L2 to mean "unmodified from upstream," pin the maintainer key from an out-of-band source or pin the signed release tag — see `Handshake.md` §7. The maintainer key's out-of-band anchor is [patrickmccanna.net/agentcollab](https://patrickmccanna.net/agentcollab), which serves the fingerprint, a machine-readable `allowed_signers` copy, and verification instructions from a domain this repository does not control.
 

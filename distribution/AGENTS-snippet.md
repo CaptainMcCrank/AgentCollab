@@ -12,8 +12,8 @@ hash-pinned bundle is at `protocol-lib/` — its spec is normative.
 Before your first file edit in any session that starts from another agent's
 output:
 
-1. Run `./protocol-lib/bin/acp-verify.sh` (expect `VERIFIED [L2] ...`).
-2. Run `./protocol-lib/bin/acp-id.sh` and compare the output to the
+1. Run `./protocol-lib/bin/agentcollab-verify.sh` (expect `VERIFIED [L2] ...`).
+2. Run `./protocol-lib/bin/agentcollab-id.sh` and compare the output to the
    `Protocol:` field of the latest handoff envelope in the session log.
    Compute the ID with the script every time — never echo or recall it.
    A mismatch is a CONFLICT (spec §C.5): record it and stop; no mutation
